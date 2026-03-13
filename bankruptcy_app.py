@@ -543,13 +543,13 @@ with tab1:
     sec("📡 Default Probability — All Models")
     g1, g2, g3, g4 = st.columns(4)
     with g1: st.plotly_chart(prob_gauge(alt["prob"], "Default Prob", alt_label),
-                              use_container_width=True, key="gauge_alt_t1", key="pc_001")
+                              use_container_width=True, key="gauge_alt_t1")
     with g2: st.plotly_chart(prob_gauge(ohl["prob"], "Default Prob", "Ohlson O-Score"),
-                              use_container_width=True, key="gauge_ohl_t1", key="pc_002")
+                              use_container_width=True, key="gauge_ohl_t1")
     with g3: st.plotly_chart(prob_gauge(zmi["prob"], "Default Prob", "Zmijewski Probit"),
-                              use_container_width=True, key="gauge_zmi_t1", key="pc_003")
+                              use_container_width=True, key="gauge_zmi_t1")
     with g4: st.plotly_chart(prob_gauge(kmv["prob"], "Default Prob", "Merton KMV"),
-                              use_container_width=True, key="gauge_kmv_t1", key="pc_004")
+                              use_container_width=True, key="gauge_kmv_t1")
 
     st.markdown("---")
     sec("🌡 Ensemble Risk Assessment")
@@ -558,7 +558,7 @@ with tab1:
     ec1, ec2 = st.columns([1, 2])
     with ec1:
         st.plotly_chart(prob_gauge(ensemble_prob, "Ensemble Probability", "Average of 4 Models"),
-                        use_container_width=True, key="gauge_ens_t1", key="pc_005")
+                        use_container_width=True, key="gauge_ens_t1")
 
         risk_color = RD if ensemble_prob > 0.5 else GD if ensemble_prob > 0.2 else GR
         risk_label = ("🚨 HIGH RISK — Immediate attention required"
@@ -641,7 +641,7 @@ with tab2:
         mcard("Default Probability", f'{alt["prob"]*100:.2f}%',
               sub="Mapped from score bands", color=alt["color"])
         st.plotly_chart(prob_gauge(alt["prob"], "Default Prob", alt_label),
-                        use_container_width=True, key="gauge_alt_t2", key="pc_006")
+                        use_container_width=True, key="gauge_alt_t2")
 
     with a2:
         # Component waterfall
@@ -746,7 +746,7 @@ with tab3:
         mcard("Default Probability", f'{ohl["prob"]*100:.2f}%',
               sub="P = 1/(1+e^−O)", color=ohl["color"])
         st.plotly_chart(prob_gauge(ohl["prob"], "Default Prob", "Ohlson O-Score"),
-                        use_container_width=True, key="gauge_ohl_t3", key="pc_007")
+                        use_container_width=True, key="gauge_ohl_t3")
 
     with o2:
         # Logistic curve with current position
@@ -797,7 +797,7 @@ with tab4:
         mcard("Default Probability", f'{zmi["prob"]*100:.2f}%',
               sub="P = Φ(X) — Normal CDF", color=zmi["color"])
         st.plotly_chart(prob_gauge(zmi["prob"], "Default Prob", "Zmijewski Probit"),
-                        use_container_width=True, key="gauge_zmi_t4", key="pc_008")
+                        use_container_width=True, key="gauge_zmi_t4")
 
     with z2:
         # Probit curve
@@ -882,7 +882,7 @@ with tab5:
               sub=kmv["zone"], color=kmv["color"])
 
     st.plotly_chart(prob_gauge(kmv["prob"], "Default Prob", "Merton KMV"),
-                    use_container_width=True, key="gauge_kmv_t5", key="pc_009")
+                    use_container_width=True, key="gauge_kmv_t5")
 
     st.markdown("---")
     sec("📈 Asset Value Distribution vs Debt Threshold")
