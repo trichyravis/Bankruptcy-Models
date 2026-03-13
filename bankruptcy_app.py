@@ -1,3 +1,4 @@
+
 """
 ═══════════════════════════════════════════════════════════════════════════════
   BANKRUPTCY PROBABILITY & COST MODEL
@@ -542,13 +543,13 @@ with tab1:
     sec("📡 Default Probability — All Models")
     g1, g2, g3, g4 = st.columns(4)
     with g1: st.plotly_chart(prob_gauge(alt["prob"], "Default Prob", alt_label),
-                              use_container_width=True)
+                              use_container_width=True, key="gauge_alt_t1", key="pc_001")
     with g2: st.plotly_chart(prob_gauge(ohl["prob"], "Default Prob", "Ohlson O-Score"),
-                              use_container_width=True)
+                              use_container_width=True, key="gauge_ohl_t1", key="pc_002")
     with g3: st.plotly_chart(prob_gauge(zmi["prob"], "Default Prob", "Zmijewski Probit"),
-                              use_container_width=True)
+                              use_container_width=True, key="gauge_zmi_t1", key="pc_003")
     with g4: st.plotly_chart(prob_gauge(kmv["prob"], "Default Prob", "Merton KMV"),
-                              use_container_width=True)
+                              use_container_width=True, key="gauge_kmv_t1", key="pc_004")
 
     st.markdown("---")
     sec("🌡 Ensemble Risk Assessment")
@@ -557,7 +558,7 @@ with tab1:
     ec1, ec2 = st.columns([1, 2])
     with ec1:
         st.plotly_chart(prob_gauge(ensemble_prob, "Ensemble Probability", "Average of 4 Models"),
-                        use_container_width=True)
+                        use_container_width=True, key="gauge_ens_t1", key="pc_005")
 
         risk_color = RD if ensemble_prob > 0.5 else GD if ensemble_prob > 0.2 else GR
         risk_label = ("🚨 HIGH RISK — Immediate attention required"
@@ -597,7 +598,7 @@ with tab1:
                        gridcolor="rgba(255,255,255,0.05)", range=[0, 105]),
             showlegend=False,
         )
-        st.plotly_chart(fig_cmp, use_container_width=True)
+        st.plotly_chart(fig_cmp, use_container_width=True, key="bar_cmp_t1")
 
     st.markdown("---")
     sec(f"📋 Financial Ratio Summary — {company_name}")
@@ -640,7 +641,7 @@ with tab2:
         mcard("Default Probability", f'{alt["prob"]*100:.2f}%',
               sub="Mapped from score bands", color=alt["color"])
         st.plotly_chart(prob_gauge(alt["prob"], "Default Prob", alt_label),
-                        use_container_width=True)
+                        use_container_width=True, key="gauge_alt_t2", key="pc_006")
 
     with a2:
         # Component waterfall
@@ -670,7 +671,7 @@ with tab2:
             yaxis=dict(showgrid=False),
             showlegend=False,
         )
-        st.plotly_chart(fig_wf, use_container_width=True)
+        st.plotly_chart(fig_wf, use_container_width=True, key="wf_alt_t2")
 
         # Score bands visualisation
         score_val = alt["score"]
@@ -695,7 +696,7 @@ with tab2:
                        ticktext=["1.81", "2.99"], gridcolor="rgba(255,255,255,0.05)"),
             yaxis=dict(visible=False),
         )
-        st.plotly_chart(fig_band, use_container_width=True)
+        st.plotly_chart(fig_band, use_container_width=True, key="band_alt_t2")
 
     # Sensitivity table
     st.markdown("---")
@@ -745,7 +746,7 @@ with tab3:
         mcard("Default Probability", f'{ohl["prob"]*100:.2f}%',
               sub="P = 1/(1+e^−O)", color=ohl["color"])
         st.plotly_chart(prob_gauge(ohl["prob"], "Default Prob", "Ohlson O-Score"),
-                        use_container_width=True)
+                        use_container_width=True, key="gauge_ohl_t3", key="pc_007")
 
     with o2:
         # Logistic curve with current position
@@ -774,7 +775,7 @@ with tab3:
                        gridcolor="rgba(255,255,255,0.05)", range=[0, 100]),
             legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP)),
         )
-        st.plotly_chart(fig_log, use_container_width=True)
+        st.plotly_chart(fig_log, use_container_width=True, key="log_ohl_t3")
 
     ibox(
         "<p>The O-Score is a <b>logistic regression</b> model. Unlike Z-Score zone mapping, "
@@ -796,7 +797,7 @@ with tab4:
         mcard("Default Probability", f'{zmi["prob"]*100:.2f}%',
               sub="P = Φ(X) — Normal CDF", color=zmi["color"])
         st.plotly_chart(prob_gauge(zmi["prob"], "Default Prob", "Zmijewski Probit"),
-                        use_container_width=True)
+                        use_container_width=True, key="gauge_zmi_t4", key="pc_008")
 
     with z2:
         # Probit curve
@@ -825,7 +826,7 @@ with tab4:
                        gridcolor="rgba(255,255,255,0.05)", range=[0, 100]),
             legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP)),
         )
-        st.plotly_chart(fig_probit, use_container_width=True)
+        st.plotly_chart(fig_probit, use_container_width=True, key="probit_zmi_t4")
 
     # 3-factor sensitivity surface
     st.markdown("---")
@@ -856,7 +857,7 @@ with tab4:
         yaxis=dict(title="Leverage (TL/TA)", gridcolor="rgba(255,255,255,0.05)"),
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP)),
     )
-    st.plotly_chart(fig_surf, use_container_width=True)
+    st.plotly_chart(fig_surf, use_container_width=True, key="surf_zmi_t4")
 
 
 # ══════════════════════════════════════════════════════════
@@ -881,7 +882,7 @@ with tab5:
               sub=kmv["zone"], color=kmv["color"])
 
     st.plotly_chart(prob_gauge(kmv["prob"], "Default Prob", "Merton KMV"),
-                    use_container_width=True)
+                    use_container_width=True, key="gauge_kmv_t5", key="pc_009")
 
     st.markdown("---")
     sec("📈 Asset Value Distribution vs Debt Threshold")
@@ -927,7 +928,7 @@ with tab5:
         yaxis=dict(title="Probability Density", gridcolor="rgba(255,255,255,0.05)"),
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP)),
     )
-    st.plotly_chart(fig_dist, use_container_width=True)
+    st.plotly_chart(fig_dist, use_container_width=True, key="dist_kmv_t5")
 
 
 # ══════════════════════════════════════════════════════════
@@ -970,7 +971,7 @@ with tab6:
                        font=dict(color=GD, size=13), x=0.0),
             legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP, size=10)),
         )
-        st.plotly_chart(fig_dir, use_container_width=True)
+        st.plotly_chart(fig_dir, use_container_width=True, key="pie_dir_t6")
 
     with c2:
         sec("🟡 Indirect Costs Breakdown")
@@ -993,7 +994,7 @@ with tab6:
                        font=dict(color=GD, size=13), x=0.0),
             legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP, size=10)),
         )
-        st.plotly_chart(fig_ind, use_container_width=True)
+        st.plotly_chart(fig_ind, use_container_width=True, key="pie_ind_t6")
 
     # Waterfall chart — full cost build-up
     st.markdown("---")
@@ -1026,7 +1027,7 @@ with tab6:
         yaxis=dict(title=f"Cost ({currency})", gridcolor="rgba(255,255,255,0.05)"),
         showlegend=False,
     )
-    st.plotly_chart(fig_wf2, use_container_width=True)
+    st.plotly_chart(fig_wf2, use_container_width=True, key="wf2_cost_t6")
 
     # Expected cost = prob × total cost
     st.markdown("---")
