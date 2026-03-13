@@ -1,4 +1,5 @@
 
+
 """
 ═══════════════════════════════════════════════════════════════════════════════
   BANKRUPTCY PROBABILITY & COST MODEL
@@ -506,7 +507,7 @@ ensemble_prob = np.mean([alt["prob"], ohl["prob"], zmi["prob"], kmv["prob"]])
 # ============================================================================
 # TABS
 # ============================================================================
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "📊 Summary Dashboard",
     "🔢 Altman Z-Score",
     "📉 Ohlson O-Score",
@@ -514,6 +515,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🔬 Merton KMV",
     "💸 Bankruptcy Costs",
     "📖 Methodology",
+    "🎓 Model Education",
 ])
 
 # ══════════════════════════════════════════════════════════
@@ -1158,4 +1160,697 @@ with tab7:
 # ============================================================================
 # FOOTER
 # ============================================================================
+# ══════════════════════════════════════════════════════════
+#  TAB 8 — MODEL EDUCATION
+# ══════════════════════════════════════════════════════════
+with tab8:
+    sec("🎓 Bankruptcy Prediction Models — Detailed Educational Notes")
+
+    st.markdown(f"""
+    <div class="info-box" style="margin-bottom:1.5rem;">
+        <p style="margin:0; font-size:0.92rem; line-height:1.8;">
+        This tab provides a rigorous academic treatment of every model used in this dashboard —
+        covering <b style="color:{GD};-webkit-text-fill-color:{GD};">theory, derivation, assumptions, empirical evidence,
+        limitations</b>, and <b style="color:{GD};-webkit-text-fill-color:{GD};">practical guidance</b> for practitioners
+        and students of Financial Risk Management, CFA, and FRM curricula.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    edu_tabs = st.tabs([
+        "1️⃣ Altman Z-Score",
+        "2️⃣ Ohlson O-Score",
+        "3️⃣ Zmijewski Probit",
+        "4️⃣ Merton KMV",
+        "5️⃣ Bankruptcy Costs",
+        "📊 Model Comparison",
+    ])
+
+    # ── EDU TAB 1: Altman ──────────────────────────────────
+    with edu_tabs[0]:
+        st.markdown(f'<div class="section-title">🔢 Altman Z-Score (1968) & Z\'- Score (1983)</div>',
+                    unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📜 Historical Background</h4>
+            <p>Edward I. Altman published the Z-Score model in 1968 in the <i>Journal of Finance</i>,
+            using a sample of 66 manufacturing firms (33 bankrupt, 33 non-bankrupt) from 1946–1965.
+            It was among the first applications of <b>Multiple Discriminant Analysis (MDA)</b> to
+            corporate bankruptcy prediction — a landmark in quantitative finance.</p>
+            <p>The model was later extended in 1983 (Z\'-Score) for <b>private firms</b> by substituting
+            book value of equity for market value, and re-estimating the coefficients. A further
+            variant (Z\'\'-Score) was developed for non-manufacturing and emerging-market firms.</p>
+            """.format(gd=GD))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">⚙️ Methodology: Multiple Discriminant Analysis</h4>
+            <p>MDA finds a <b>linear combination</b> of predictor variables that best separates two
+            groups (bankrupt vs. non-bankrupt) by maximising the ratio of between-group variance
+            to within-group variance — analogous to a multivariate ANOVA.</p>
+            <p>The discriminant function is:</p>
+            <div class="formula-box">Z = w₁X₁ + w₂X₂ + ... + wₙXₙ</div>
+            <p>where weights wᵢ are chosen to maximise the <b>Mahalanobis distance</b> between
+            group centroids. The resulting score is compared to cut-off values derived empirically.</p>
+            """.format(gd=GD))
+
+        with c2:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📐 The Five Variables Explained</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+            <tr style="border-bottom:1px solid rgba(255,215,0,0.3);">
+                <th style="color:{gd};padding:6px;text-align:left;">Variable</th>
+                <th style="color:{gd};padding:6px;text-align:left;">Ratio</th>
+                <th style="color:{gd};padding:6px;text-align:left;">Economic Meaning</th>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">X₁</td>
+                <td style="padding:5px;">WC / TA</td>
+                <td style="padding:5px;">Short-term liquidity buffer relative to asset base</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">X₂</td>
+                <td style="padding:5px;">RE / TA</td>
+                <td style="padding:5px;">Cumulative profitability; proxy for age and leverage history</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">X₃</td>
+                <td style="padding:5px;">EBIT / TA</td>
+                <td style="padding:5px;">Core operating return on assets, ignores capital structure</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">X₄</td>
+                <td style="padding:5px;">MVE / TL</td>
+                <td style="padding:5px;">Market-based solvency cushion over total obligations</td>
+            </tr>
+            <tr>
+                <td style="padding:5px;color:{lb};">X₅</td>
+                <td style="padding:5px;">Sales / TA</td>
+                <td style="padding:5px;">Asset turnover efficiency; competitive position signal</td>
+            </tr>
+            </table>
+            """.format(gd=GD, lb=LB))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">🎯 Classification Zones</h4>
+            <div style="font-size:0.85rem;line-height:2.0;">
+            <span style="color:{gr};font-weight:700;">✅ Safe Zone (Z > 2.99)</span> — Financially healthy;<br>&nbsp;&nbsp;&nbsp;bankruptcy unlikely in near term<br>
+            <span style="color:{gd};font-weight:700;">⚠️ Grey Zone (1.81–2.99)</span> — Ambiguous; elevated risk;<br>&nbsp;&nbsp;&nbsp;warrants closer monitoring<br>
+            <span style="color:{rd};font-weight:700;">🚨 Distress Zone (Z < 1.81)</span> — High bankruptcy risk;<br>&nbsp;&nbsp;&nbsp;~95% accuracy in original sample<br><br>
+            <b>Z\'-Score (Private) Cutoffs:</b><br>
+            Safe: Z\' > 2.9 | Grey: 1.23–2.9 | Distress: Z\' < 1.23
+            </div>
+            """.format(gd=GD, gr=GR, rd=RD))
+
+        st.markdown("---")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">✅ Key Assumptions</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Multivariate normality</b> of predictors within each group</li>
+            <li><b>Equal covariance matrices</b> across bankrupt / non-bankrupt groups (homoscedasticity)</li>
+            <li><b>Linear separability</b> — a linear combination sufficiently discriminates the groups</li>
+            <li><b>Independent observations</b> — no serial correlation across firms/time</li>
+            <li><b>Stationary relationships</b> — coefficients derived in 1946–65 remain valid today</li>
+            <li><b>Accounting comparability</b> — ratios are comparable across firms and GAAP systems</li>
+            </ul>
+            """.format(gd=GD))
+
+        with col_b:
+            ibox("""
+            <h4 style="color:{rd};margin-top:0;">⚠️ Limitations & Criticisms</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Sample bias:</b> Only 66 US manufacturing firms; not representative of services, tech, or emerging markets</li>
+            <li><b>Temporal instability:</b> Coefficients may be outdated — economy, accounting standards and industry mix have changed</li>
+            <li><b>No probability output:</b> Score maps to zones, not a calibrated default probability</li>
+            <li><b>Linearity constraint:</b> Cannot capture non-linear relationships or interaction effects</li>
+            <li><b>MDA assumptions often violated:</b> Financial ratios are rarely normally distributed</li>
+            <li><b>X₅ (Sales/TA) controversy:</b> Altman (1983) dropped it in Z\'\' variant as it adds noise for non-manufacturers</li>
+            <li><b>Window dressing:</b> Susceptible to earnings management and accounting manipulation</li>
+            </ul>
+            """.format(rd=RD))
+
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">📚 Empirical Accuracy & Academic Evidence</h4>
+        <p style="font-size:0.85rem;line-height:1.9;">
+        Altman (1968) reported <b>95% accuracy one year prior</b> to bankruptcy and 72% two years prior on the original sample.
+        Subsequent out-of-sample studies showed lower accuracy (70–80% range), with the model performing better in recessionary periods.
+        Begley, Ming & Watts (1996) re-estimated the model on 1980s data and found the original coefficients performed poorly out-of-sample,
+        suggesting coefficient instability. Despite criticisms, the Z-Score remains the most widely cited model in credit analysis,
+        bond covenant design, and regulatory stress testing due to its <b>simplicity and interpretability</b>.
+        It is part of the CFA Institute curriculum (Level 1) and referenced in Basel II internal ratings guidance.
+        </p>
+        """.format(gd=GD))
+
+    # ── EDU TAB 2: Ohlson ──────────────────────────────────
+    with edu_tabs[1]:
+        st.markdown(f'<div class="section-title">📉 Ohlson O-Score (1980) — Logistic Regression</div>',
+                    unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📜 Historical Background</h4>
+            <p>James A. Ohlson (1980) published "Financial Ratios and the Probabilistic Prediction
+            of Bankruptcy" in the <i>Journal of Accounting Research</i>. He used a sample of
+            <b>2,163 industrial companies (105 bankrupt)</b> from SEC filings over 1970–1976 —
+            far larger and more representative than Altman's sample.</p>
+            <p>Ohlson's key innovation was using <b>conditional logit (logistic regression)</b>
+            instead of MDA, directly producing a <b>calibrated probability</b> of bankruptcy.
+            He also introduced lag structures and addressed the choice-based sampling bias
+            prevalent in earlier studies.</p>
+            """.format(gd=GD))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">⚙️ Methodology: Logistic Regression</h4>
+            <p>The logistic model estimates:</p>
+            <div class="formula-box">P(Y=1) = 1 / (1 + e<sup>−(β₀ + β₁X₁ + ... + βₙXₙ)</sup>)</div>
+            <p>The <b>log-odds (logit)</b> is linear in the predictors:</p>
+            <div class="formula-box">ln[P/(1−P)] = β₀ + β₁X₁ + ... + βₙXₙ = O-Score</div>
+            <p>Unlike MDA, logistic regression does <b>not</b> require multivariate normality
+            or equal covariance matrices — making it more robust to the distributional
+            properties of financial ratios.</p>
+            """.format(gd=GD))
+
+        with c2:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📐 The Nine Variables Explained</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.80rem;">
+            <tr style="border-bottom:1px solid rgba(255,215,0,0.3);">
+                <th style="color:{gd};padding:5px;">Variable</th>
+                <th style="color:{gd};padding:5px;">Definition</th>
+                <th style="color:{gd};padding:5px;">Weight</th>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">SIZE</td><td style="padding:4px;">log(TA / GNP deflator)</td><td style="padding:4px;color:{rd};">−0.407</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">TLTA</td><td style="padding:4px;">Total Liabilities / Total Assets</td><td style="padding:4px;color:{rd};">+6.03</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">WCTA</td><td style="padding:4px;">Working Capital / Total Assets</td><td style="padding:4px;color:{gr};">−1.43</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">CLCA</td><td style="padding:4px;">Current Liabilities / Current Assets</td><td style="padding:4px;color:{rd};">+0.076</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">OENEG</td><td style="padding:4px;">1 if TL > TA (negative equity)</td><td style="padding:4px;color:{rd};">−1.72</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">NITA</td><td style="padding:4px;">Net Income / Total Assets</td><td style="padding:4px;color:{gr};">−2.37</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">FUTL</td><td style="padding:4px;">Funds from Operations / TL</td><td style="padding:4px;color:{gr};">−1.83</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">INTWO</td><td style="padding:4px;">1 if NI < 0 (last 2 years)</td><td style="padding:4px;color:{rd};">+0.285</td>
+            </tr>
+            <tr>
+                <td style="padding:4px;color:{lb};">CHIN</td><td style="padding:4px;">(NI_t − NI_{t-1}) / (|NI_t| + |NI_{t-1}|)</td><td style="padding:4px;color:{gr};">−0.521</td>
+            </tr>
+            </table>
+            """.format(gd=GD, lb=LB, rd=RD, gr=GR))
+
+        st.markdown("---")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">✅ Key Assumptions</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Binary outcome:</b> Y = 1 (bankrupt within one year), Y = 0 (survived)</li>
+            <li><b>Linear log-odds:</b> The logit is a linear function of predictors</li>
+            <li><b>Independence of observations</b> (no firm appears twice)</li>
+            <li><b>No perfect multicollinearity</b> among predictors</li>
+            <li><b>Large sample:</b> MLE requires sufficient events per variable (~10–15 events per predictor)</li>
+            <li><b>GNP deflator available:</b> SIZE variable requires price-level adjustment</li>
+            </ul>
+            """.format(gd=GD))
+
+        with col_b:
+            ibox("""
+            <h4 style="color:{rd};margin-top:0;">⚠️ Limitations</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>GNP deflator dependency:</b> SIZE variable requires macroeconomic price data not always available</li>
+            <li><b>CHIN requires prior-year data:</b> Not computable for new firms or single-year reports</li>
+            <li><b>Industry-agnostic:</b> Coefficients may not apply uniformly across sectors</li>
+            <li><b>Accounting manipulation:</b> Like Z-Score, susceptible to earnings quality issues</li>
+            <li><b>Threshold sensitivity:</b> 50% cutoff is arbitrary; optimal threshold depends on misclassification costs</li>
+            <li><b>Non-financial distress:</b> Doesn\'t capture market sentiment or macro shocks</li>
+            </ul>
+            """.format(rd=RD))
+
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">📚 Empirical Evidence & Academic Standing</h4>
+        <p style="font-size:0.85rem;line-height:1.9;">
+        Ohlson reported <b>96.1% accuracy</b> at the 0.5 threshold on the estimation sample.
+        Subsequent studies (Zavgren 1985, Platt & Platt 1990) found the O-Score generally
+        outperforms Altman on out-of-sample tests, particularly for non-manufacturing firms.
+        Shumway (2001) noted that Ohlson\'s static model ignores time-varying hazard rates —
+        his hazard model extension improved on O-Score performance.
+        The model is widely taught in CFA (Level 2) and FRM curricula as the standard
+        probabilistic alternative to Z-Score, with the advantage that it outputs a
+        <b>directly interpretable default probability</b>.
+        </p>
+        """.format(gd=GD))
+
+    # ── EDU TAB 3: Zmijewski ───────────────────────────────
+    with edu_tabs[2]:
+        st.markdown(f'<div class="section-title">📐 Zmijewski Score (1984) — Probit Regression</div>',
+                    unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📜 Historical Background</h4>
+            <p>Mark E. Zmijewski (1984) published "Methodological Issues Related to the Estimation
+            of Financial Distress Prediction Models" in the <i>Journal of Accounting Research</i>.
+            His primary contribution was <b>methodological critique</b> rather than just model
+            building — he identified two critical biases in prior studies:</p>
+            <p><b>1. Choice-based sampling bias</b> (oversampling of bankrupt firms relative to their
+            true population frequency) and <b>2. Complete data bias</b> (excluding firms with missing
+            data, which correlates with distress).</p>
+            <p>He used <b>probit regression</b> on a sample of <b>840 firms (40 bankrupt)</b> from
+            1972–1978, maintaining the true population ratio — making his probability estimates
+            far better calibrated than Altman\'s or Ohlson\'s.</p>
+            """.format(gd=GD))
+
+        with c2:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">⚙️ Methodology: Probit vs Logit</h4>
+            <p>Both probit and logit map a linear score to a probability, but differ in the
+            assumed error distribution:</p>
+            <table style="width:100%;font-size:0.82rem;border-collapse:collapse;">
+            <tr style="border-bottom:1px solid rgba(255,215,0,0.3);">
+                <th style="color:{gd};padding:6px;">Feature</th>
+                <th style="color:{gd};padding:6px;">Logit (Ohlson)</th>
+                <th style="color:{gd};padding:6px;">Probit (Zmijewski)</th>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">Link function</td><td style="padding:5px;">Logistic (sigmoid)</td><td style="padding:5px;">Normal CDF Φ(·)</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">Error dist.</td><td style="padding:5px;">Logistic</td><td style="padding:5px;">Standard Normal</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:5px;color:{lb};">Tail behaviour</td><td style="padding:5px;">Heavier tails</td><td style="padding:5px;">Lighter tails</td>
+            </tr>
+            <tr>
+                <td style="padding:5px;color:{lb};">In practice</td><td style="padding:5px;">Very similar results</td><td style="padding:5px;">Very similar results</td>
+            </tr>
+            </table>
+            <div class="formula-box" style="margin-top:10px;">
+            X = −4.336 − 4.513·ROA + 5.679·Leverage + 0.004·Liquidity<br>
+            P(default) = Φ(X) = ∫<sub>−∞</sub><sup>X</sup> φ(t) dt
+            </div>
+            """.format(gd=GD, lb=LB))
+
+        st.markdown("---")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">✅ Key Assumptions</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Normal latent variable:</b> Underlying distress propensity is normally distributed</li>
+            <li><b>Representative sampling:</b> True population bankruptcy frequency is preserved</li>
+            <li><b>Complete data available:</b> No systematic missing data bias</li>
+            <li><b>Three ratios sufficient:</b> ROA, leverage, and liquidity capture the key dimensions of financial health</li>
+            <li><b>Linearity in the probit index:</b> Same linearity assumption as logit</li>
+            </ul>
+            """.format(gd=GD))
+
+        with col_b:
+            ibox("""
+            <h4 style="color:{rd};margin-top:0;">⚠️ Limitations</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Parsimony trade-off:</b> Only 3 variables — may miss important information in complex distress situations</li>
+            <li><b>No market data:</b> Entirely backward-looking (accounting-based); misses market signals of distress</li>
+            <li><b>Accounting quality dependency:</b> Same vulnerability to earnings management as other accounting models</li>
+            <li><b>US-centric:</b> Calibrated on US firms 1972–78; significant recalibration needed for India, emerging markets</li>
+            <li><b>Static model:</b> Point-in-time estimate; doesn\'t account for improving/deteriorating trends</li>
+            </ul>
+            """.format(rd=RD))
+
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">💡 Zmijewski\'s Methodological Contributions</h4>
+        <p style="font-size:0.85rem;line-height:1.9;">
+        Zmijewski\'s paper is considered a <b>methodological landmark</b> more than a predictive model.
+        His demonstration that choice-based sampling inflates apparent model accuracy by <b>10–15 percentage points</b>
+        fundamentally changed how bankruptcy researchers design studies. His weighted exogenous sampling
+        MLE (WESML) approach is now standard in the literature. The model itself (3 variables) trades
+        parsimony for coverage — it is best used as a <b>quick screen or cross-check</b> alongside
+        richer models. Hillegeist et al. (2004) showed that market-based models (Merton KMV) significantly
+        outperform Zmijewski out-of-sample, though the probit model remains valuable when market data
+        is unavailable.
+        </p>
+        """.format(gd=GD))
+
+    # ── EDU TAB 4: Merton KMV ─────────────────────────────
+    with edu_tabs[3]:
+        st.markdown(f'<div class="section-title">🔬 Merton KMV Structural Model (1974) — Distance to Default</div>',
+                    unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📜 Historical Background</h4>
+            <p>Robert C. Merton (1974) published "On the Pricing of Corporate Debt: The Risk Structure
+            of Interest Rates" in the <i>Journal of Finance</i>, extending the Black-Scholes (1973)
+            option pricing framework to corporate liabilities. Merton showed that <b>equity is a call
+            option on the firm\'s assets</b>, with the debt face value as the strike price.</p>
+            <p>KMV Corporation (Kealhofer, McQuown, Vasicek) commercialised this framework in the
+            1990s, adding the concept of <b>Expected Default Frequency (EDF™)</b> mapped from Distance
+            to Default using an empirical database of actual defaults. The model was acquired by
+            Moody\'s in 2002 and remains the basis of Moody\'s Analytics CreditEdge™.</p>
+            """.format(gd=GD))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">⚙️ Core Intuition</h4>
+            <p>A firm defaults when its <b>asset value V falls below its debt obligation D</b>.
+            Since asset value follows a stochastic process, default is probabilistic.</p>
+            <p>Equity holders have:</p>
+            <div class="formula-box">E = max(V − D, 0)</div>
+            <p>This is exactly a <b>European call option</b> on firm assets V,
+            with strike = debt face value D, maturity = T (typically 1 year).</p>
+            <p>By Black-Scholes, this gives us the <b>equity pricing equation</b> and a
+            relationship between equity volatility and asset volatility, enabling us
+            to back out the unobservable asset value and asset volatility from
+            observable equity data.</p>
+            """.format(gd=GD))
+
+        with c2:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📐 Full Model Derivation</h4>
+            <p><b>Step 1 — Equity as a Call Option:</b></p>
+            <div class="formula-box">
+            E = V·N(d₁) − D·e<sup>−rT</sup>·N(d₂)<br><br>
+            d₁ = [ln(V/D) + (r + ½σ²ᵥ)T] / (σᵥ√T)<br>
+            d₂ = d₁ − σᵥ√T
+            </div>
+            <p><b>Step 2 — Volatility Linkage (Itô\'s Lemma):</b></p>
+            <div class="formula-box">σ_E · E = N(d₁) · σ_V · V</div>
+            <p><b>Step 3 — Iterative Solution:</b><br>
+            Solve simultaneously for V and σᵥ using the two equations above,
+            starting from V₀ = E + D as initial guess.</p>
+            <p><b>Step 4 — Distance to Default:</b></p>
+            <div class="formula-box">
+            DD = d₂ = [ln(V/D) + (r − ½σ²ᵥ)T] / (σᵥ√T)<br>
+            P(default) = N(−DD) = N(−d₂)
+            </div>
+            <p style="font-size:0.8rem;color:{ts};">DD measures how many standard deviations
+            the asset value is above the default threshold — higher DD = safer firm.</p>
+            """.format(gd=GD, ts=TS))
+
+        st.markdown("---")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">✅ Key Assumptions</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>Geometric Brownian Motion:</b> Asset value V follows dV = μV dt + σᵥV dW</li>
+            <li><b>Constant volatility:</b> σᵥ does not change over [0, T]</li>
+            <li><b>Constant risk-free rate</b> r over the horizon T</li>
+            <li><b>Single debt maturity:</b> All debt matures at time T (simplified balance sheet)</li>
+            <li><b>Default only at maturity:</b> No early default (European option structure)</li>
+            <li><b>Frictionless markets:</b> No taxes, transaction costs, or short-sale constraints</li>
+            <li><b>Continuous trading:</b> Perfect hedging is possible (Black-Scholes world)</li>
+            <li><b>Publicly traded equity:</b> Market price and volatility are observable</li>
+            </ul>
+            """.format(gd=GD))
+
+        with col_b:
+            ibox("""
+            <h4 style="color:{rd};margin-top:0;">⚠️ Limitations & Extensions</h4>
+            <ul style="line-height:2.0;font-size:0.85rem;margin:0;padding-left:1.2rem;">
+            <li><b>GBM assumption violated:</b> Asset returns exhibit fat tails, jumps, and stochastic volatility</li>
+            <li><b>Single debt class:</b> Ignores seniority structure, covenants, convertibles</li>
+            <li><b>Default only at T:</b> First-passage-time models (Black-Cox 1976) allow continuous default barrier</li>
+            <li><b>Risk-neutral probability:</b> N(−d₂) is a risk-neutral PD; real-world PD requires drift adjustment</li>
+            <li><b>Requires market data:</b> Cannot directly apply to private firms or subsidiaries</li>
+            <li><b>Equity vol estimation:</b> Historical vol vs. implied vol choice materially affects results</li>
+            <li><b>Debt maturity simplification:</b> KMV uses 1-year horizon with (STD + 0.5·LTD) as default point</li>
+            </ul>
+            <p style="font-size:0.8rem;margin-top:8px;color:{ts};">Extensions: Leland (1994) endogenous default,
+            CreditGrades™ (RiskMetrics), CDS-implied PDs.</p>
+            """.format(rd=RD, ts=TS))
+
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">📚 Empirical Performance & Industry Usage</h4>
+        <p style="font-size:0.85rem;line-height:1.9;">
+        Hillegeist et al. (2004, <i>Review of Accounting Studies</i>) conducted a comprehensive comparison
+        showing that the Merton model contains significantly more information about bankruptcy than Altman
+        or Ohlson after controlling for market-to-book and firm size. Bharath & Shumway (2008, <i>Review of
+        Financial Studies</i>) found that a <b>naïve Merton approximation</b> (without full iterative solution)
+        performs nearly as well, suggesting the structural form rather than precise calibration drives the
+        predictive power. Industry usage: Moody\'s CreditEdge™, JP Morgan CreditMetrics™, Bloomberg
+        Default Risk scores all build on Merton\'s framework. The Bank for International Settlements (BIS)
+        endorses structural models for IRBA internal credit risk models under Basel II/III.
+        </p>
+        """.format(gd=GD))
+
+    # ── EDU TAB 5: Bankruptcy Costs ────────────────────────
+    with edu_tabs[4]:
+        st.markdown(f'<div class="section-title">💸 Bankruptcy Cost Theory & Estimation</div>',
+                    unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📜 Trade-Off Theory of Capital Structure</h4>
+            <p>Modigliani & Miller (1963) showed that in a world with corporate taxes,
+            <b>debt creates value</b> through the interest tax shield. However, higher debt
+            increases the probability of financial distress and bankruptcy.</p>
+            <p>The <b>Static Trade-Off Theory</b> posits that an optimal capital structure exists
+            where the marginal benefit of the tax shield equals the marginal expected cost of
+            financial distress:</p>
+            <div class="formula-box">
+            V_Levered = V_Unlevered + PV(Tax Shield) − PV(Financial Distress Costs)<br><br>
+            Optimal D/E: ∂[PV(Tax Shield)] / ∂D = ∂[PV(Distress Cost)] / ∂D
+            </div>
+            <p>Bankruptcy costs are thus a central input to any leverage optimisation —
+            they determine how much debt a firm should carry.</p>
+            """.format(gd=GD))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">🔴 Direct Costs — Definition & Evidence</h4>
+            <p>Direct costs are <b>out-of-pocket cash expenditures</b> triggered by the
+            formal bankruptcy process:</p>
+            <ul style="font-size:0.85rem;line-height:1.9;margin:0;padding-left:1.2rem;">
+            <li><b>Legal fees:</b> Bankruptcy attorneys, restructuring counsel (typically 1–4% of assets)</li>
+            <li><b>Administrative:</b> Court fees, trustee fees, accountant fees, US Trustee levies</li>
+            <li><b>Investment banking:</b> Restructuring advisor fees (0.5–1.5% of assets)</li>
+            <li><b>Expert witnesses, valuations, claims agents</b></li>
+            </ul>
+            <p><b>Empirical estimates:</b> Warner (1977) found direct costs averaged
+            <b>5.3% of pre-bankruptcy firm value</b> for railroads. Weiss (1990) found
+            3.1% for 37 NYSE/AMEX firms. LoPucki & Doherty (2004) found 1.4–3.9%
+            for large Chapter 11 cases.</p>
+            """.format(gd=GD))
+
+        with c2:
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">🟡 Indirect Costs — Definition & Evidence</h4>
+            <p>Indirect costs arise from <b>behavioural and operational disruptions</b>
+            during financial distress — they are harder to measure but typically
+            <b>far larger</b> than direct costs:</p>
+            <ul style="font-size:0.85rem;line-height:1.9;margin:0;padding-left:1.2rem;">
+            <li><b>Lost sales:</b> Customers avoid distressed firms (especially for durable goods
+            requiring service/warranties). Opler & Titman (1994) found distressed firms
+            lose 26% more market share than healthy rivals in industry downturns.</li>
+            <li><b>Management distraction:</b> Executives spend 10–20% of time on restructuring
+            rather than operations (Gilson, John & Lang 1990)</li>
+            <li><b>Supplier credit tightening:</b> Trade creditors shorten payment terms or
+            demand prepayment, increasing working capital requirements</li>
+            <li><b>Key employee flight:</b> Talented staff leave for more stable employers;
+            replacement costs are 50–200% of annual salary</li>
+            <li><b>Underinvestment (debt overhang):</b> Myers (1977) — shareholders may
+            reject positive NPV projects when gains accrue to debtholders</li>
+            <li><b>Asset fire sales:</b> Distressed assets sold at 20–40% discount
+            (Shleifer & Vishny 1992)</li>
+            </ul>
+            """.format(gd=GD))
+
+            ibox("""
+            <h4 style="color:{gd};margin-top:0;">📊 Total Cost Estimates from Literature</h4>
+            <table style="width:100%;font-size:0.82rem;border-collapse:collapse;">
+            <tr style="border-bottom:1px solid rgba(255,215,0,0.3);">
+                <th style="color:{gd};padding:5px;">Study</th>
+                <th style="color:{gd};padding:5px;">Sample</th>
+                <th style="color:{gd};padding:5px;">Total Cost % Assets</th>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">Warner (1977)</td><td style="padding:4px;">Railroads</td><td style="padding:4px;">5.3% (direct only)</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">Altman (1984)</td><td style="padding:4px;">Retail + Industrials</td><td style="padding:4px;">11–17% (direct + indirect)</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                <td style="padding:4px;color:{lb};">Andrade & Kaplan (1998)</td><td style="padding:4px;">LBO distress</td><td style="padding:4px;">10–23% of pre-distress value</td>
+            </tr>
+            <tr>
+                <td style="padding:4px;color:{lb};">Bris et al. (2006)</td><td style="padding:4px;">Chapter 7 & 11</td><td style="padding:4px;">Direct: 8.1% median (Ch.7)</td>
+            </tr>
+            </table>
+            """.format(gd=GD, lb=LB))
+
+        st.markdown("---")
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">⚠️ Limitations of Cost Estimation Models</h4>
+        <p style="font-size:0.85rem;line-height:1.9;">
+        <b>1. Counterfactual problem:</b> Indirect costs require estimating what the firm\'s
+        performance <i>would have been</i> absent distress — this is inherently unobservable.<br>
+        <b>2. Industry heterogeneity:</b> Costs vary enormously by industry. Airlines and retailers
+        have high customer-flight costs; utilities have very low indirect costs due to regulated demand.<br>
+        <b>3. Pre-distress effects:</b> Some studies (Andrade & Kaplan) argue firms start declining
+        before bankruptcy, making it difficult to attribute losses entirely to distress costs.<br>
+        <b>4. Restructuring vs. liquidation:</b> Chapter 11 (reorganisation) vs Chapter 7 (liquidation)
+        have very different cost profiles — the dashboard estimates are calibrated for reorganisation.<br>
+        <b>5. Indian context:</b> Under the IBC 2016 (Insolvency and Bankruptcy Code), resolution
+        timelines and costs differ significantly from US Chapter 11 benchmarks used in academic literature.
+        IBBI data suggests direct costs of 2–6% for large CIRP resolutions.
+        </p>
+        """.format(gd=GD))
+
+    # ── EDU TAB 6: Model Comparison ───────────────────────
+    with edu_tabs[5]:
+        st.markdown(f'<div class="section-title">📊 Comparative Analysis of All Models</div>',
+                    unsafe_allow_html=True)
+
+        # Radar / spider chart comparison
+        categories = ["Accuracy", "Probability Output", "No Market Data Needed",
+                      "Handles Private Firms", "Interpretability",
+                      "Theoretical Rigour", "Ease of Use"]
+        scores = {
+            "Altman Z-Score":  [78, 20, 100, 70, 95, 55, 95],
+            "Ohlson O-Score":  [82, 95, 100, 90, 75, 70, 80],
+            "Zmijewski":       [76, 95, 100, 90, 85, 72, 90],
+            "Merton KMV":      [88, 90, 10,  20, 60, 98, 45],
+        }
+        colors_radar = [GD, LB, GR, RD]
+
+        fig_radar = go.Figure()
+        cats_closed = categories + [categories[0]]
+        for (model, vals), clr in zip(scores.items(), colors_radar):
+            vals_closed = vals + [vals[0]]
+            fig_radar.add_trace(go.Scatterpolar(
+                r=vals_closed, theta=cats_closed, fill="toself",
+                name=model,
+                line=dict(color=clr, width=2),
+                fillcolor=clr.replace("#", "rgba(") + ",0.08)" if clr.startswith("#") else clr,
+                opacity=0.85,
+            ))
+        fig_radar.update_layout(
+            **plotly_layout_base(height=480),
+            polar=dict(
+                bgcolor=CB,
+                radialaxis=dict(visible=True, range=[0, 100],
+                                gridcolor="rgba(255,255,255,0.1)",
+                                tickfont=dict(color=TS, size=9)),
+                angularaxis=dict(gridcolor="rgba(255,255,255,0.15)",
+                                 tickfont=dict(color=TP, size=10)),
+            ),
+            title=dict(text="Model Capability Radar — Relative Scores (0–100)",
+                       font=dict(color=GD, size=13), x=0.0),
+            legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=TP)),
+            showlegend=True,
+        )
+        st.plotly_chart(fig_radar, use_container_width=True, key="radar_edu_t8")
+
+        st.markdown("---")
+
+        # Comprehensive comparison table
+        comp_data = {
+            "Criterion": [
+                "Year Published", "Methodology", "Sample Size", "Variables Used",
+                "Output Type", "Probability Calibration", "Market Data Required",
+                "Works for Private Firms", "Industry Coverage", "Time Horizon",
+                "Handles Accounting Manipulation", "Regulatory Recognition",
+                "Best Use Case", "Key Weakness",
+            ],
+            "Altman Z-Score": [
+                "1968", "MDA (Linear)", "66 firms", "5 ratios",
+                "Score + Zone", "❌ Zone mapping only", "✅ Market cap (public) / ❌ (private Z')",
+                "✅ Z\'-Score available", "Manufacturing originally; extended", "1–2 years",
+                "❌ Susceptible", "CFA Level 1, Basel II reference",
+                "Quick screening, bond analysis", "Sample age; linearity; no probability",
+            ],
+            "Ohlson O-Score": [
+                "1980", "Logistic Regression", "2,163 firms", "9 variables",
+                "Calibrated probability", "✅ Direct sigmoid output", "❌ Accounting only",
+                "✅ Yes", "Industrial firms broadly", "1 year",
+                "❌ Susceptible", "CFA Level 2, FRM Part 1",
+                "Probability-based credit decisions", "GNP deflator; prior-year NI required",
+            ],
+            "Zmijewski": [
+                "1984", "Probit Regression", "840 firms", "3 ratios",
+                "Calibrated probability", "✅ Direct normal CDF", "❌ Accounting only",
+                "✅ Yes", "Broad", "1 year",
+                "❌ Susceptible", "Academic reference",
+                "Quick probabilistic check", "Only 3 variables; US-centric",
+            ],
+            "Merton KMV": [
+                "1974 (1990s KMV)", "Structural / Option Pricing", "Market data", "Equity + debt",
+                "Distance-to-Default + PD", "✅ Risk-neutral probability", "✅ Required",
+                "❌ Requires equity market", "All public firms", "1 year (standard)",
+                "✅ Uses market prices", "Basel II IRBA, Moody\'s Analytics",
+                "Public firm credit risk, bond pricing", "GBM assumption; private firms excluded",
+            ],
+        }
+        comp_df = pd.DataFrame(comp_data)
+        st.dataframe(
+            comp_df.style
+            .set_properties(**{"font-family": "JetBrains Mono,monospace",
+                               "font-size": "11px", "text-align": "left",
+                               "white-space": "normal"})
+            .set_table_styles([{"selector": "th",
+                                "props": [("background-color", DB), ("color", GD),
+                                          ("font-weight", "700"), ("text-align", "center"),
+                                          ("font-size", "11px")]}]),
+            use_container_width=True, hide_index=True
+        )
+
+        st.markdown("---")
+        ibox("""
+        <h4 style="color:{gd};margin-top:0;">🧭 Practitioner\'s Guide — Which Model to Use?</h4>
+        <table style="width:100%;font-size:0.84rem;border-collapse:collapse;line-height:1.8;">
+        <tr style="border-bottom:1px solid rgba(255,215,0,0.4);">
+            <th style="color:{gd};padding:7px;text-align:left;">Situation</th>
+            <th style="color:{gd};padding:7px;text-align:left;">Recommended Model(s)</th>
+            <th style="color:{gd};padding:7px;text-align:left;">Reason</th>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <td style="padding:6px;color:{lb};">Large listed manufacturing company</td>
+            <td style="padding:6px;">Altman Z + Merton KMV</td>
+            <td style="padding:6px;">Both applicable; cross-validate with market & accounting signals</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <td style="padding:6px;color:{lb};">Private SME / family business</td>
+            <td style="padding:6px;">Altman Z\' + Ohlson + Zmijewski</td>
+            <td style="padding:6px;">No market data available; accounting models only</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <td style="padding:6px;color:{lb};">Bank loan underwriting / credit scoring</td>
+            <td style="padding:6px;">Ohlson or Zmijewski</td>
+            <td style="padding:6px;">Calibrated probability needed for pricing and provisioning</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <td style="padding:6px;color:{lb};">Bond valuation / credit spread analysis</td>
+            <td style="padding:6px;">Merton KMV</td>
+            <td style="padding:6px;">Structural model directly links to credit spread via N(−d₂)</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <td style="padding:6px;color:{lb};">Regulatory stress testing (Basel III)</td>
+            <td style="padding:6px;">Merton KMV + internal PD model</td>
+            <td style="padding:6px;">Basel IRBA requires PD, LGD, EAD; structural models preferred</td>
+        </tr>
+        <tr>
+            <td style="padding:6px;color:{lb};">Academic research / benchmarking</td>
+            <td style="padding:6px;">All four + ensemble</td>
+            <td style="padding:6px;">Triangulation reduces model risk; use ensemble probability</td>
+        </tr>
+        </table>
+        """.format(gd=GD, lb=LB))
+
+
 footer_bar()
