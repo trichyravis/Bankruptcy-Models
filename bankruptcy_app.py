@@ -312,34 +312,67 @@ curr          = currency.split()[0]
 # ── Styled top-row radio as pill tabs ─────────────────────────────────────────
 st.markdown("""
 <style>
+/* ── Radio pill container ── */
 div.row-widget.stRadio > div[role="radiogroup"] {
-    display: flex; gap: 12px; flex-direction: row;
-    background: #112240; padding: 8px 12px; border-radius: 10px;
-    border: 1px solid rgba(255,215,0,0.25);
+    display: flex !important;
+    gap: 12px !important;
+    flex-direction: row !important;
+    background: #112240 !important;
+    padding: 8px 12px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(255,215,0,0.25) !important;
 }
+/* ── Each pill ── */
 div.row-widget.stRadio > div[role="radiogroup"] > label {
     background: transparent !important;
-    border: 1px solid rgba(255,215,0,0.3) !important;
+    border: 1px solid rgba(255,215,0,0.4) !important;
     border-radius: 8px !important;
     padding: 8px 22px !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    white-space: nowrap !important;
+}
+/* ── Text inside pill — target every possible child ── */
+div.row-widget.stRadio > div[role="radiogroup"] > label p,
+div.row-widget.stRadio > div[role="radiogroup"] > label span,
+div.row-widget.stRadio > div[role="radiogroup"] > label div:not(:first-child),
+div.row-widget.stRadio > div[role="radiogroup"] > label div[data-testid],
+div.row-widget.stRadio > div[role="radiogroup"] > label > div > div {
     color: #e6f1ff !important;
     -webkit-text-fill-color: #e6f1ff !important;
     font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: all 0.25s ease !important;
-    white-space: nowrap;
+    font-size: 0.95rem !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
+/* ── Hover state ── */
 div.row-widget.stRadio > div[role="radiogroup"] > label:hover {
     background: #004d80 !important;
     border-color: #FFD700 !important;
 }
+div.row-widget.stRadio > div[role="radiogroup"] > label:hover p,
+div.row-widget.stRadio > div[role="radiogroup"] > label:hover span,
+div.row-widget.stRadio > div[role="radiogroup"] > label:hover > div > div {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+/* ── Active / selected pill ── */
 div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked),
 div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] {
     background: linear-gradient(135deg, #003366, #004d80) !important;
     border: 2px solid #FFD700 !important;
+}
+div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) p,
+div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) span,
+div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) > div > div,
+div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] p,
+div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] span,
+div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] > div > div {
     color: #FFD700 !important;
     -webkit-text-fill-color: #FFD700 !important;
+    font-weight: 700 !important;
 }
+/* ── Hide the radio dot ── */
 div.row-widget.stRadio > div[role="radiogroup"] > label > div:first-child {
     display: none !important;
 }
