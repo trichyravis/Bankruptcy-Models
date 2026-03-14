@@ -61,7 +61,18 @@ section[data-testid="stSidebar"] input{{color:{TD}!important;background-color:#f
 .stTabs [data-baseweb="tab-list"]{{gap:8px;}}
 .stTabs [data-baseweb="tab"]{{background:{CB};border:1px solid rgba(255,215,0,0.3);border-radius:8px;color:{TP};padding:0.5rem 1rem;}}
 .stTabs [aria-selected="true"]{{background:{DB};border:2px solid {GD};color:{GD};}}
-.stButton>button{{background:linear-gradient(135deg,{MB},{DB})!important;color:{GD}!important;border:2px solid {GD}!important;border-radius:8px!important;font-weight:600!important;}}
+.stButton>button{{background:linear-gradient(135deg,{MB},{DB})!important;color:{GD}!important;border:2px solid {GD}!important;border-radius:8px!important;font-weight:600!important;font-size:1rem!important;}}
+.stButton>button:hover{{background:linear-gradient(135deg,{GD},#d4af37)!important;color:{DB}!important;transform:translateY(-2px)!important;box-shadow:0 4px 16px rgba(255,215,0,0.5)!important;}}
+/* Nav buttons specifically — larger and more prominent */
+div[data-testid="column"]:nth-child(1) .stButton>button,
+div[data-testid="column"]:nth-child(2) .stButton>button {{
+    font-size:1.05rem!important;font-weight:700!important;
+    padding:14px 20px!important;letter-spacing:0.5px!important;
+    background:linear-gradient(135deg,#004d80,#003366)!important;
+    color:#FFD700!important;-webkit-text-fill-color:#FFD700!important;
+    border:2px solid #FFD700!important;border-radius:10px!important;
+    text-shadow:none!important;min-height:52px!important;
+}}
 .stButton>button:hover{{background:linear-gradient(135deg,{GD},#d4af37)!important;color:{DB}!important;}}
 .stAlert{{background-color:rgba(255,255,255,0.95)!important;}}
 .stAlert p,.stAlert span,.stAlert div{{color:{TD}!important;}}
@@ -309,82 +320,36 @@ curr          = currency.split()[0]
 #  TWO-ROW NAVIGATION  (Radio selector → nested st.tabs)
 # ══════════════════════════════════════════════════════════════════════════════
 
-# ── Styled top-row radio as pill tabs ─────────────────────────────────────────
-st.markdown("""
-<style>
-/* ── Radio pill container ── */
-div.row-widget.stRadio > div[role="radiogroup"] {
-    display: flex !important;
-    gap: 12px !important;
-    flex-direction: row !important;
-    background: #112240 !important;
-    padding: 8px 12px !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(255,215,0,0.25) !important;
-}
-/* ── Each pill ── */
-div.row-widget.stRadio > div[role="radiogroup"] > label {
-    background: transparent !important;
-    border: 1px solid rgba(255,215,0,0.4) !important;
-    border-radius: 8px !important;
-    padding: 8px 22px !important;
-    cursor: pointer !important;
-    transition: all 0.25s ease !important;
-    white-space: nowrap !important;
-}
-/* ── Text inside pill — target every possible child ── */
-div.row-widget.stRadio > div[role="radiogroup"] > label p,
-div.row-widget.stRadio > div[role="radiogroup"] > label span,
-div.row-widget.stRadio > div[role="radiogroup"] > label div:not(:first-child),
-div.row-widget.stRadio > div[role="radiogroup"] > label div[data-testid],
-div.row-widget.stRadio > div[role="radiogroup"] > label > div > div {
-    color: #e6f1ff !important;
-    -webkit-text-fill-color: #e6f1ff !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-/* ── Hover state ── */
-div.row-widget.stRadio > div[role="radiogroup"] > label:hover {
-    background: #004d80 !important;
-    border-color: #FFD700 !important;
-}
-div.row-widget.stRadio > div[role="radiogroup"] > label:hover p,
-div.row-widget.stRadio > div[role="radiogroup"] > label:hover span,
-div.row-widget.stRadio > div[role="radiogroup"] > label:hover > div > div {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-}
-/* ── Active / selected pill ── */
-div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked),
-div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] {
-    background: linear-gradient(135deg, #003366, #004d80) !important;
-    border: 2px solid #FFD700 !important;
-}
-div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) p,
-div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) span,
-div.row-widget.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"]:has(input:checked) > div > div,
-div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] p,
-div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] span,
-div.row-widget.stRadio > div[role="radiogroup"] > label[aria-checked="true"] > div > div {
-    color: #FFD700 !important;
-    -webkit-text-fill-color: #FFD700 !important;
-    font-weight: 700 !important;
-}
-/* ── Hide the radio dot ── */
-div.row-widget.stRadio > div[role="radiogroup"] > label > div:first-child {
-    display: none !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# ── Top-row navigation — plain st.columns buttons, no CSS fight ───────────────
+nav_col1, nav_col2, nav_spacer = st.columns([2, 2, 5])
+with nav_col1:
+    btn1 = st.button("📊  Models & Analysis",  use_container_width=True, key="nav_models")
+with nav_col2:
+    btn2 = st.button("📚  Reference & Education", use_container_width=True, key="nav_ref")
 
-top_nav = st.radio(
-    label="Navigation",
-    options=["📊 Models & Analysis", "📚 Reference & Education"],
-    horizontal=True,
-    label_visibility="collapsed",
-)
+# Session state to track which section is active
+if "top_nav" not in st.session_state:
+    st.session_state.top_nav = "📊 Models & Analysis"
+if btn1:
+    st.session_state.top_nav = "📊 Models & Analysis"
+if btn2:
+    st.session_state.top_nav = "📚 Reference & Education"
+
+top_nav = st.session_state.top_nav
+
+# Show which section is active
+active_label = "📊 Models & Analysis" if top_nav == "📊 Models & Analysis" else "📚 Reference & Education"
+st.markdown(f"""
+<div style="background:linear-gradient(135deg,#003366,#004d80);
+            border:2px solid #FFD700; border-radius:8px;
+            padding:10px 20px; margin:10px 0 16px 0;
+            display:inline-block;">
+  <span style="color:#FFD700; font-size:1.05rem; font-weight:700;
+               font-family:'Playfair Display',serif;">
+    ▶ &nbsp; {active_label}
+  </span>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
 
