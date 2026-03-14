@@ -310,9 +310,8 @@ curr          = currency.split()[0]
 # ══════════════════════════════════════════════════════════════════════════════
 
 # ── Styled top-row radio as pill tabs ─────────────────────────────────────────
-st.markdown(f"""
+st.markdown("""
 <style>
-div[data-testid="stHorizontalBlock"]:has(div.row-widget.stRadio) {{}}
 div.row-widget.stRadio > div[role="radiogroup"] {
     display: flex; gap: 12px; flex-direction: row;
     background: #112240; padding: 8px 12px; border-radius: 10px;
